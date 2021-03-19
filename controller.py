@@ -1,5 +1,7 @@
 import pygame
 
+from constants import *
+
 class Controller(object):
 
     def __init__(self, ev_manager, screen):
@@ -12,17 +14,48 @@ class Controller(object):
         self.viewport = None
         #Listener Groups
         self.actors = []
+        self.blocks = []
 
     def add_actor(self, actor):
         self.actors.append(actor)
         actor.ev_manager = self.ev_manager
         self.ev_manager.register(actor)
 
+    def add_block(self, block):
+        self.blocks.append(block)
+        block.ev_manager = self.ev_manager
+        self.ev_manager.register(block)
+
+    def handle_physics(self):
+        for actor in self.actors:
+            trial_x = actor.x + (actor.left_vx + actor.right_vx)
+            trial_y = actor.y + actor.vy + GRAVITY
+            trial_rect = pygame.Rect((trial_x, trial_y), actor.img.get_size())
+            collide_block = None
+            for block in self.blocks:
+                if trial_rect.colliderect(block.get_rect()):
+                    print("HIT!", actor.y, actor.vy)
+                    collide_block = block
+            if collide_block:
+                actor.grounded = True
+                print("Grounded")
+                actor.y = block.y-actor.img.get_height()
+                actor.vy = 0
+                actor.x += actor.left_vx + actor.right_vx
+            else:
+                actor.grounded = False
+                actor.vy += GRAVITY
+                actor.x += actor.left_vx + actor.right_vx
+                actor.y += actor.vy
+
     def on_tick(self, evt):
         self.screen.fill((0,0,0))
+        self.handle_physics()
         for actor in self.actors:
             actor.draw_to(self.screen)
 ##            actor.tick()
+        for block in self.blocks:
+            block.draw_to(self.screen)
         pygame.display.flip()
 
     def on_MouseMotion(self,evt):
@@ -69,7 +102,6 @@ class Controller(object):
 
     def grab_screen(self,):
         pass
-##        if actor.get_rect().collidepoint(evt.pos[0],evt.pos[1]):
             
     def zoom(self,direction):
         self.zoom_val = self.zoom_val+(0.025*direction)

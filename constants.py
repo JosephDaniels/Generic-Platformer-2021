@@ -8,7 +8,9 @@ GREEN = (0,255,0)
 
 BLUE = (0,0,255)
 
-PLAYER_IMAGE = "Images/critter.bmp"
+GRAVITY = 1.2
+
+JUMP_STRENGTH = 20
 
 ROTATION = {
     ' ' : 0,

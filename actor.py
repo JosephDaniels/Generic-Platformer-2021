@@ -1,3 +1,5 @@
+import pygame
+
 class Actor(object):
     def __init__(self, x, y, img):
         
@@ -51,6 +53,9 @@ class Actor(object):
 
     def draw_to(self, surface):
         surface.blit(self.img, (self.x, self.y))
+
+    def get_rect(self):
+        return pygame.Rect((self.x, self.y), self.img.get_size())
 
     def on_tick(self, evt):
         self.next_frame()
