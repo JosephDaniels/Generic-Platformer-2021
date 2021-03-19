@@ -1,0 +1,46 @@
+g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0 g0
+                        d2 w1 s1 w1 d1
+            d2 s1 w1 s1 d0          d3 s1 w1 s1 d1
+            w0                                  w0
+         d2 d0                                  d3 d1
+         w0    Z0 z0                      Z0 z0    w0
+      d2 d0                                        d3 d1
+      o1                   Z0 a0 z0                   o1
+      o1                                              o1
+      w0                                              w0
+      w0                                              w0
+      w0                                              w0
+   d2 d0                                              d3 d1
+   s0                                                    s0
+   d3 d1                                              d2 d0
+      w0                                              w0
+            E0 b0 b0 e0                E0 b0 b0 e0  
+
+            E0 b0 b0 e0                E0 b0 b0 e0
+
+            E0 b0 b0 e0                E0 b0 b0 e0
+                                
+            E0 b0 b0 e0                E0 b0 b0 e0
+
+            E0 b0 b0 e0                E0 b0 b0 e0
+
+            E0 b0 b0 e0                E0 b0 b0 e0
+
+            E0 b0 b0 e0                E0 b0 b0 e0
+  
+            E0 b0 b0 e0                E0 b0 b0 e0
+
+            E0 b0 b0 e0                E0 b0 b0 e0
+
+            E0 b0 b0 e0                E0 b0 b0 e0
+ 
+            E0 b0 b0 e0                E0 b0 b0 e0
+   
+            E0 b0 b0 e0                E0 b0 b0 e0
+      w0                                              w0
+      d3 d1    Z0 z0                      Z0 z0    d2 d0
+         d3 d1                                  d2 d0
+            w0 w1 w1 T0 w1          w1 T0 w1 w1 w0 
+            w0       o1                o1       w0
+            w0       w0                w0       w0
+            d3 w1 w1 T2 o0 o0 o0 o0 o0 T2 w1 w1 d0
