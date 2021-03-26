@@ -36,7 +36,8 @@ class Controller(object):
                 if trial_rect.colliderect(block.get_rect()):
                     print("HIT!", actor.y, actor.vy)
                     collide_block = block
-            if collide_block:
+                    break
+            if collide_block: ## Detects a collision, needs a switchcase between vertical and horizontal positions
                 actor.grounded = True
                 print("Grounded")
                 actor.y = block.y-actor.img.get_height()

@@ -132,7 +132,7 @@ def test_2():
     pygame.quit()
     
 if __name__ == "__main__":
-    test()
+    test_2()
 
 
     

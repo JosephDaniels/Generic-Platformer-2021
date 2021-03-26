@@ -1,22 +1,32 @@
+import glob
+
 import pygame
 
 class Actor(object):
-    def __init__(self, x, y, img):
+    def __init__(self, x, y):
         
         self.animations = {}
         self.frames = []
         self.state = ""
         self.currframe = 0
-        self.img = img
         
         self.x = x
         self.y = y
 
+
+    def _get_curr_img(self):
+        print("Frame", self.currframe, "of", len(self.frames))
+        return self.frames[self.currframe]
+
+    img = property(_get_curr_img)
+
     def next_frame(self):
+
         self.currframe+=1
         if self.currframe >= len(self.frames):
             self.currframe = 0
-
+            
+    @staticmethod
     def alphamasked(img, green_screen_color):
         """returns an image alpha masked so that pixels with the given
            RGB green_screen_color are made transparent"""
@@ -30,32 +40,39 @@ class Actor(object):
                     new_image.set_at((x,y), (r,g,b,0))
         return new_image
 
-    def load_animation(self, state_name, filepattern, reverse = False):
+    def load_animation(self, state_name, filepattern, scaling = 1, reverse = False):
         frames = []
         filenamelist = glob.glob(filepattern)
         filenamelist.sort()
         for filename in filenamelist:
-            x = pygame.image.load(filename)
-            green_screen_color = x.get_at((0,0))
-            x = alphamasked(x, green_screen_color)
+            img = pygame.image.load(filename)
+            w,h = img.get_size()
+            w = int(w*scaling)
+            h = int(h*scaling)
+            img = pygame.transform.scale( img, (w,h))
+            #green_screen_color = x.get_at((0,0))
+            #x = self.alphamasked(x, green_screen_color)
             if reverse == True:
-                frames.append( pygame.transform.flip(x,1,0) )
+                frames.append(pygame.transform.flip(img, 1, 0) )
             else:
-                frames.append( x )
-        print (len(frames))
+                frames.append(img)
+        print(len(frames), "frames loaded for animation", state_name)
         self.animations[state_name] = frames
-        return frames
 
+    
     def set_state(self, state_name):
         self.state = state_name
         self.frames = self.animations[self.state]
         self.currframe = 0
 
     def draw_to(self, surface):
-        surface.blit(self.img, (self.x, self.y))
+        surface.blit(self.frames[self.currframe], (self.x, self.y))
 
     def get_rect(self):
         return pygame.Rect((self.x, self.y), self.img.get_size())
 
     def on_tick(self, evt):
         self.next_frame()
+
+    def dump(self):
+        print("State", self.state)
