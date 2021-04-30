@@ -32,22 +32,43 @@ class Controller(object):
             trial_y = actor.y + actor.vy + GRAVITY
             trial_rect = pygame.Rect((trial_x, trial_y), actor.img.get_size())
             collide_block = None
-            for block in self.blocks:
+            for block in self.blocks: ##Checks if any block has collided with actor
                 if trial_rect.colliderect(block.get_rect()):
                     print("HIT!", actor.y, actor.vy)
                     collide_block = block
                     break
             if collide_block: ## Detects a collision, needs a switchcase between vertical and horizontal positions
-                actor.grounded = True
-                print("Grounded")
-                actor.y = block.y-actor.img.get_height()
+                actor.y = block.y-block.img.get_height()/2-actor.img.get_height()/2-1
                 actor.vy = 0
                 actor.x += actor.left_vx + actor.right_vx
             else:
-                actor.grounded = False
                 actor.vy += GRAVITY
                 actor.x += actor.left_vx + actor.right_vx
                 actor.y += actor.vy
+
+    def find_colliding_edge(self, actor, block): ## Physics assumes 'real' physics
+        edges = []
+        collide_x_dir = 0
+        collide_y_dir = 0
+        if actor.vx < 0 : ## Test Right Edge
+            delta_x = actor.x-(block.x+block.width) ## Determines distance in the x direction
+            collide_x_dir = -1
+            print ("Hit Right")
+        if actor.vx > 0 : ## Test Left Edge
+            delta_x = block.x-actor.x
+            collide_x_dir = +1
+            print ("Hit Left")
+        if actor.vy < 0 : ## Test Top Edge
+            delta_y = actor.y-(block.y+block.height)
+            collide_y_dir = -1
+            print ("Hit Top")
+        if actor.vy > 0 : ## Test Bottom Edge
+            delta_y = block.y-actor.y
+            collide_y_dir = +1
+            print ("Hit Bottom")
+        ##First check if its a single collision
+        ## If so, handle it
+##        if collide_x_dir = 0 and collide_y_dir 
 
     def on_tick(self, evt):
         self.screen.fill((0,0,0))

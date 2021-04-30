@@ -10,12 +10,11 @@ class Actor(object):
         self.state = ""
         self.currframe = 0
         
-        self.x = x
-        self.y = y
+        self.x = x ## Defined to be the center of the body
+        self.y = y ## Defined to be the center of the body
 
 
     def _get_curr_img(self):
-        print("Frame", self.currframe, "of", len(self.frames))
         return self.frames[self.currframe]
 
     img = property(_get_curr_img)
@@ -66,10 +65,12 @@ class Actor(object):
         self.currframe = 0
 
     def draw_to(self, surface):
-        surface.blit(self.frames[self.currframe], (self.x, self.y))
+        w, h = self.img.get_size()
+        surface.blit(self.frames[self.currframe], (self.x-w/2, self.y-h/2))
 
     def get_rect(self):
-        return pygame.Rect((self.x, self.y), self.img.get_size())
+        w, h = self.img.get_size()
+        return pygame.Rect((self.x-w/2, self.y-h/2), [w,h])
 
     def on_tick(self, evt):
         self.next_frame()

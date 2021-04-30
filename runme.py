@@ -18,8 +18,8 @@ class Player(actor.Actor):
         
     ## Create Event Handlers
     def on_Jump(self, evt):
-        if self.grounded:
-            self.vy -= JUMP_STRENGTH
+        self.y-=1
+        self.vy -= JUMP_STRENGTH
             
     def on_Duck(self, evt):
         pass
@@ -80,9 +80,41 @@ def main():
     # kickstart the game
     em.run()
 
+def collide_test():
+    pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE)
+    
+    # set up the main controller
+    em = gui.EventManager()
+    ctrl = controller.Controller(em, screen)
+    
+    # create the "megaman"
+    player = Player(0,300)
+    player.load_animation("walk_right","Images\\Sprites\\run*.png", scaling = 0.1)
+    player.load_animation("walk_left","Images\\Sprites\\run*.png", scaling = 0.1, reverse=True )
+    player.set_state("walk_right")
+    
+    ctrl.add_actor(player)
+    
+    #create the blocks
+    for x in range(6):
+        block = Block(x*64,416)
+        block.load_animation("static", "Images\\Basic_Block.png");
+        block.set_state("static")
+        ctrl.add_block(block)
+    for x in range(6):
+        block = Block(x*64+192, 480)
+        block.load_animation("static", "Images\\Basic_Block.png");
+        block.set_state("static")
+        ctrl.add_block(block)
+    block = Block(240, 400)
+
+    # kickstart the game
+    em.run()
+
         
 if __name__ == "__main__":
-    main()
+    collide_test()
 
 ##Make a viewport for controlling the screen and world chords together
     
