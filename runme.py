@@ -1,122 +1,138 @@
-import pygame
-import time, math
-import gui
-import actor
-import controller
+"""
+Platformer Game
+"""
+import arcade
 
-##import glob
+# Constants
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 650
+SCREEN_TITLE = "Platformer"
 
-from constants import *
+# Physics
+GRAVITY = 1
+PLAYER_JUMP_SPEED = 20
 
-class Player(actor.Actor):
-    def __init__(self, *args):
-        super().__init__(*args)
-        self.left_vx = 0
-        self.right_vx = 0
-        self.vy = 0
-        self.grounded = False
-        
-    ## Create Event Handlers
-    def on_Jump(self, evt):
-        self.y-=1
-        self.vy -= JUMP_STRENGTH
-            
-    def on_Duck(self, evt):
-        pass
-    
-    def on_Move_Left(self, evt):
-        self.set_state("walk_left")
-        self.left_vx = -5
-        
-    def on_Move_Right(self, evt):
-        self.set_state("walk_right")
-        self.right_vx = +5
-        
-    def on_Stop_Duck(self, evt):
-        pass
-    
-    def on_Stop_Move_Left(self, evt):
-        self.left_vx = 0
-        
-    def on_Stop_Move_Right(self, evt):
-        self.right_vx = 0
+# Constants used to scale our sprites from their original size
+CHARACTER_SCALING = 0.25
+TILE_SCALING = 1.0
+COIN_SCALING = 0.5
+CRATE_SCALING = 0.5
+
+# Movement speed of player, in pixels per frame
+PLAYER_MOVEMENT_SPEED = 5
 
 
+class MyGame(arcade.Window):
+    """
+    Main application class.
+    """
 
-class Block(actor.Actor):
-    def __init__(self, *args):
-        super().__init__(*args)
+    def __init__(self):
 
-        
+        # Call the parent class and set up the window
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+
+        # These are 'lists' that keep track of our sprites. Each sprite should
+        # go into a list.
+        self.coin_list = None
+        self.wall_list = None
+        self.player_list = None
+
+        # Separate variable that holds the player sprite
+        self.player_sprite = None
+
+        # Our physics engine
+        self.physics_engine = None
+
+        arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
+
+    def setup(self):
+        """ Set up the game here. Call this function to restart the game. """
+        # Create the Sprite lists
+        self.player_list = arcade.SpriteList()
+        self.wall_list = arcade.SpriteList(use_spatial_hash=True)
+        self.coin_list = arcade.SpriteList(use_spatial_hash=True)
+
+        # Set up the player, specifically placing it at these coordinates.
+        self.player_sprite = arcade.Sprite("Images/Sprites/run1.png", CHARACTER_SCALING)
+        self.player_sprite.center_x = 64
+        self.player_sprite.center_y = 128
+        self.player_list.append(self.player_sprite)
+
+        # Create the ground
+        # This shows using a loop to place multiple sprites horizontally
+        for x in range(0, 1250, 64):
+            wall = arcade.Sprite("Images/Basic_Block.png", TILE_SCALING)
+            wall.center_x = x
+            wall.center_y = 32
+            self.wall_list.append(wall)
+
+        # Put some crates on the ground
+        # This shows using a coordinate list to place sprites
+        coordinate_list = [[512, 96],
+                           [256, 96],
+                           [768, 96]]
+
+        for coordinate in coordinate_list:
+            # Add a crate on the ground
+            wall = arcade.Sprite("Images/cathedral_altar.png", CRATE_SCALING)
+            wall.position = coordinate
+            self.wall_list.append(wall)
+
+        # Create the 'physics engine'
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
+                                                             self.wall_list,
+                                                             GRAVITY)
+
+    def on_draw(self):
+        """ Render the screen. """
+
+        # Clear the screen to the background color
+        arcade.start_render()
+
+        # Draw our sprites
+        self.wall_list.draw()
+        self.coin_list.draw()
+        self.player_list.draw()
+
+    def on_key_press(self, key, modifiers):
+        """Called whenever a key is pressed. """
+
+        if key == arcade.key.UP or key == arcade.key.W:
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = PLAYER_JUMP_SPEED
+        elif key == arcade.key.DOWN or key == arcade.key.S:
+            self.player_sprite.change_y = -PLAYER_MOVEMENT_SPEED
+        elif key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+        """Called when the user releases a key. """
+
+        if key == arcade.key.UP or key == arcade.key.W:
+            self.player_sprite.change_y = 0
+        elif key == arcade.key.DOWN or key == arcade.key.S:
+            self.player_sprite.change_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = 0
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = 0
+
+    def on_update(self, delta_time):
+        """ Movement and game logic """
+
+        # Move the player with the physics engine
+        self.physics_engine.update()
+
 
 def main():
-    pygame.init()
-    screen = pygame.display.set_mode(SCREEN_SIZE)
-    
-    # set up the main controller
-    em = gui.EventManager()
-    ctrl = controller.Controller(em, screen)
-    
-    # create the "megaman"
-    player = Player(0,300)
-    player.load_animation("walk_right","Images\\Sprites\\run*.png", scaling = 0.1)
-    player.load_animation("walk_left","Images\\Sprites\\run*.png", scaling = 0.1, reverse=True )
-    player.set_state("walk_right")
-    
-    ctrl.add_actor(player)
-    
-    #create the blocks
-    for x in range(6):
-        block = Block(x*64,416)
-        block.load_animation("static", "Images\\Basic_Block.png");
-        block.set_state("static")
-        ctrl.add_block(block)
-    for x in range(6):
-        block = Block(x*64+192, 480)
-        block.load_animation("static", "Images\\Basic_Block.png");
-        block.set_state("static")
-        ctrl.add_block(block)
+    """ Main method """
+    window = MyGame()
+    window.setup()
+    arcade.run()
 
-    # kickstart the game
-    em.run()
 
-def collide_test():
-    pygame.init()
-    screen = pygame.display.set_mode(SCREEN_SIZE)
-    
-    # set up the main controller
-    em = gui.EventManager()
-    ctrl = controller.Controller(em, screen)
-    
-    # create the "megaman"
-    player = Player(0,300)
-    player.load_animation("walk_right","Images\\Sprites\\run*.png", scaling = 0.1)
-    player.load_animation("walk_left","Images\\Sprites\\run*.png", scaling = 0.1, reverse=True )
-    player.set_state("walk_right")
-    
-    ctrl.add_actor(player)
-    
-    #create the blocks
-    for x in range(6):
-        block = Block(x*64,416)
-        block.load_animation("static", "Images\\Basic_Block.png");
-        block.set_state("static")
-        ctrl.add_block(block)
-    for x in range(6):
-        block = Block(x*64+192, 480)
-        block.load_animation("static", "Images\\Basic_Block.png");
-        block.set_state("static")
-        ctrl.add_block(block)
-    block = Block(240, 400)
-
-    # kickstart the game
-    em.run()
-
-        
 if __name__ == "__main__":
-    collide_test()
-
-##Make a viewport for controlling the screen and world chords together
-    
-##    viewport = Viewport(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
-##    controller.viewport = viewport
+    main()
