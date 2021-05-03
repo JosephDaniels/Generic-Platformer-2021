@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="25" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" name="my_tiles" tilewidth="128" tileheight="128" tilecount="4" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="128" height="128" source="../../../Pictures/RPG Tiles/Test Ground 1.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="128" height="128"/>
+    <object id="2" x="0" y="0" width="128" height="128"/>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <image width="128" height="128" source="../../../Pictures/RPG Tiles/Coin_Tile.png"/>
+   <objectgroup draworder="index" id="10">
+    <object id="10" x="12" y="11" width="106.333" height="107">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <image width="128" height="128" source="../../../Pictures/RPG Tiles/crate_1.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="128" height="128"/>
+    <object id="2" x="0.333333" y="0.333333" width="128" height="128"/>
+   </objectgroup>
+  </tile>
+  <tile id="6">
+   <image width="128" height="128" source="../../../Pictures/RPG Tiles/Dirty Earth.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="128" height="128"/>
+    <object id="2" x="0" y="0" width="128" height="128"/>
+   </objectgroup>
+  </tile>
+ </tileset>
+ <layer id="1" name="Platforms" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAqoBxihmFrqCKlHFydWHT0BIx0wABpcACY=
+  </data>
+ </layer>
+ <layer id="2" name="Coins" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGASuRbGLV0RsAAB/gACk=
+  </data>
+ </layer>
+ <layer id="3" name="Crates" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRQC3ARoQaRiimpR3sUEwMwOYeYuwgVj0jkntI8TcbCe5gR8OkmE/IDmT3o2N8/iHWfAY85pPiHwDWVADr
+  </data>
+ </layer>
+</map>
