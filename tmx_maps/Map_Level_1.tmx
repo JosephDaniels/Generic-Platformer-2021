@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="25" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="12" nextobjectid="4">
+ <tileset firstgid="1" name="my_tiles" tilewidth="128" tileheight="128" tilecount="13" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/Test Ground 1.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="128" height="128"/>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/Coin_Tile.png"/>
+   <objectgroup draworder="index" id="10">
+    <object id="10" x="12" y="11" width="106.333" height="107">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/crate_1.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="128" height="128"/>
+   </objectgroup>
+  </tile>
+  <tile id="6">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/Dirty Earth.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="128" height="128"/>
+   </objectgroup>
+  </tile>
+  <tile id="7">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/chest_left.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="11" width="128" height="102"/>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/Fat_Metal_Spike.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="2.05444" y="123.951">
+     <polygon points="0,0 58.3803,-119.329 124.465,0.684812"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/doorWithKnob.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="128" height="128"/>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/doorWithKeyhole.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="128" height="128"/>
+   </objectgroup>
+  </tile>
+  <tile id="11">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/doorNoKnob.png"/>
+  </tile>
+  <tile id="12">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/doorClosedTop.png"/>
+  </tile>
+  <tile id="13">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/bread.png"/>
+  </tile>
+  <tile id="14">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/banana.png"/>
+  </tile>
+  <tile id="15">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/grapes.png"/>
+  </tile>
+ </tileset>
+ <layer id="6" name="Background" width="25" height="20" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGwVAHAAfQAAE=
+  </data>
+ </layer>
+ <objectgroup id="10" name="Moving Platforms">
+  <object id="3" gid="1" x="513.333" y="1921.33" width="128" height="128">
+   <properties>
+    <property name=" change_x" value="2.0"/>
+    <property name="boundary_left" value="500.0"/>
+    <property name="boundary_right" value="1000.0"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="11" name="Ladders" width="25" height="20" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGwVAHAAfQAAE=
+  </data>
+ </layer>
+ <layer id="1" name="Platforms" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMFwBIxRTqgYfYIdiStVgAzC3wfQz4sHEqMGnb6hjAPVwAbA=
+  </data>
+ </layer>
+ <layer id="8" name="Doors" width="25" height="20" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAqIB7x0sIOLDnYMNwAAKJAAGA==
+  </data>
+ </layer>
+ <layer id="2" name="Coins" width="25" height="20" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAooB6xEsEcB7QAAHZwAEA==
+  </data>
+ </layer>
+ <layer id="3" name="Crates" width="25" height="20" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAoGFrANtAOGAQAAD2gABw==
+  </data>
+ </layer>
+ <layer id="4" name="Don't Touch" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGwVAHAAfQAAE=
+  </data>
+ </layer>
+ <layer id="5" name="Chests" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAoGB+AYaAcMYQAAEbAACQ==
+  </data>
+ </layer>
+ <layer id="7" name="Foreground" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGwVAHAAfQAAE=
+  </data>
+ </layer>
+</map>

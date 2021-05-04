@@ -1,5 +1,10 @@
 # Generic Platformer 2021
  A generic engine for making platformer games.
+ 
+We were trying our best to make our own platformer with physics engine on purely pygame.
+We might come back to it at some point to work on it more.
+
+
 
 Physics Information:
 
