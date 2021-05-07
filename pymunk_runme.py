@@ -74,6 +74,26 @@ BULLET_MASS = 0.1
 # Make bullet less affected by gravity
 BULLET_GRAVITY = 300
 
+# Healthbar Variables
+HEALTHBAR_WIDTH = 25
+HEALTHBAR_HEIGHT = 3
+HEALTHBAR_OFFSET_Y = 35
+
+HEALTH_NUMBER_OFFSET_X = -10
+HEALTH_NUMBER_OFFSET_Y = 15
+
+# Stamina bar Variables
+STAMINABAR_WIDTH = 25
+STAMINABAR_HEIGHT = 3
+STAMINABAR_POS_X = 200
+STAMINABAR_POS_Y = 100
+
+# Experience bar Variables
+EXPBAR_WIDTH = 25
+EXPBAR_HEIGHT = 3
+EXPBAR_POS_X = 200
+EXPBAR_POS_Y = 100
+
 class PlayerSprite(arcade.Sprite):
     """ Player Sprite """
     def __init__(self,
@@ -82,6 +102,17 @@ class PlayerSprite(arcade.Sprite):
         """ Init """
         # Let parent initialize
         super().__init__()
+
+        # Player Health
+        self.max_health = 5 ## Maximum Health
+        self.current_health = 5 ## Current Health
+
+        # Stamina
+        self.max_stamina = 10
+        self.current_stamina = 10
+
+        # Experience
+        ## self.experience = 0  ## To be done later
 
         # Set our scale
         self.scale = SPRITE_SCALING_PLAYER
@@ -131,6 +162,7 @@ class PlayerSprite(arcade.Sprite):
 
         self.ladder_list = ladder_list
         self.is_on_ladder = False
+
 
     def pymunk_moved(self, physics_engine, dx, dy, d_angle):
         """ Handle being moved by the pymunk engine """
@@ -202,6 +234,36 @@ class PlayerSprite(arcade.Sprite):
                 self.cur_texture = 0
             self.texture = self.walk_textures[self.cur_texture][self.character_face_direction]
 
+    def draw_health_number(self):
+        """ Draw how many hit points we have """
+
+        health_string = f"{self.current_health}/{self.max_health}"
+        arcade.draw_text(health_string,
+                         start_x=self.center_x + HEALTH_NUMBER_OFFSET_X,
+                         start_y=self.center_y + HEALTH_NUMBER_OFFSET_Y,
+                         font_size=12,
+                         color=arcade.color.WHITE)
+
+    def draw_health_bar(self):
+        """ Draw the health bar """
+
+        # Draw the 'unhealthy' background
+        if self.current_health < self.max_health:
+            arcade.draw_rectangle_filled(center_x=self.center_x,
+                                         center_y=self.center_y + HEALTHBAR_OFFSET_Y,
+                                         width=HEALTHBAR_WIDTH,
+                                         height=3,
+                                         color=arcade.color.RED)
+
+        # Calculate width based on health
+        health_width = HEALTHBAR_WIDTH * (self.current_health / self.max_health)
+
+        arcade.draw_rectangle_filled(center_x=self.center_x - 0.5 * (HEALTHBAR_WIDTH - health_width),
+                                     center_y=self.center_y + HEALTHBAR_OFFSET_Y,
+                                     width=health_width,
+                                     height=HEALTHBAR_HEIGHT,
+                                     color=arcade.color.GREEN)
+
 class BulletSprite(arcade.SpriteSolidColor):
     """ Bullet Sprite """
     def pymunk_moved(self, physics_engine, dx, dy, d_angle):
@@ -224,6 +286,7 @@ class GameWindow(arcade.Window):
 
         # Sprite lists we need
         self.player_list: Optional[arcade.SpriteList] = None
+        self.enemy_list: Optional[arcade.SpriteList] = None
         self.wall_list: Optional[arcade.SpriteList] = None
         self.bullet_list: Optional[arcade.SpriteList] = None
         self.item_list: Optional[arcade.SpriteList] = None
@@ -247,6 +310,7 @@ class GameWindow(arcade.Window):
 
         # Create the sprite lists
         self.player_list = arcade.SpriteList()
+        self.enemy_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
 
         # Read in the tiled map
@@ -271,11 +335,31 @@ class GameWindow(arcade.Window):
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
 
+        # Create an Enemy for testing purposes
+        enemy = arcade.Sprite("images/enemies/slimeBlue.png", SPRITE_SIZE)
+        print (enemy)
+
+        enemy.bottom = SPRITE_SIZE
+        enemy.left = SPRITE_SIZE * 2
+
+        # Set boundaries on the left/right the enemy can't cross
+        enemy.boundary_right = SPRITE_SIZE * 8
+        enemy.boundary_left = SPRITE_SIZE * 3
+        enemy.change_x = 2
+        self.enemy_list.append(enemy)
+
+        # Create player health bar sprite
+##        self.player_healthbar = PlayerHealthBar(self.player_sprite,
+##                                                self.player_sprite.scale,
+##                                                self.player_sprite.max_health,
+##                                                hit_box_algorithm="None")
+        
         # Set player location
         grid_x = 1
         grid_y = 1
         self.player_sprite.center_x = SPRITE_SIZE * grid_x + SPRITE_SIZE / 2
         self.player_sprite.center_y = SPRITE_SIZE * grid_y + SPRITE_SIZE / 2
+        
         # Add to player sprite list
         self.player_list.append(self.player_sprite)
 
@@ -508,18 +592,20 @@ class GameWindow(arcade.Window):
         self.moving_sprites_list.draw()
         self.bullet_list.draw()
         self.item_list.draw()
-        self.player_list.draw()
+        
+        for player in self.player_list:
+            player.draw()
+            player.draw_health_bar()
+            player.draw_health_number()
 
-        # for item in self.player_list:
-        #     item.draw_hit_box(arcade.color.RED)
-        # for item in self.item_list:
-        #     item.draw_hit_box(arcade.color.RED)
+        for enemy in self.enemy_list:
+            enemy.draw()
 
 def main():
     """ Main method """
     window = GameWindow(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    window.setup()
-    arcade.run()
+    window.setup() ## Sets up entire map and put player at location
+    arcade.run() ## Starts the whole thing
 
 
 if __name__ == "__main__":
