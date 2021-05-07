@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="25" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="12" nextobjectid="4">
- <tileset firstgid="1" name="my_tiles" tilewidth="128" tileheight="128" tilecount="13" columns="0">
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="25" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="12" nextobjectid="5">
+ <properties>
+  <property name="change_x" value="1.0"/>
+ </properties>
+ <tileset firstgid="1" name="my_tiles" tilewidth="128" tileheight="128" tilecount="19" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
    <image width="128" height="128" source="../../../../Pictures/RPG Tiles/Test Ground 1.png"/>
@@ -69,6 +72,24 @@
   <tile id="15">
    <image width="128" height="128" source="../../../../Pictures/RPG Tiles/grapes.png"/>
   </tile>
+  <tile id="16">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/apple.png"/>
+  </tile>
+  <tile id="17">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/ladder_middle.png"/>
+  </tile>
+  <tile id="18">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/ladder_top.png"/>
+  </tile>
+  <tile id="19">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/lever_left.png"/>
+  </tile>
+  <tile id="20">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/lever_mid.png"/>
+  </tile>
+  <tile id="21">
+   <image width="128" height="128" source="../../../../Pictures/RPG Tiles/lever_right.png"/>
+  </tile>
  </tileset>
  <layer id="6" name="Background" width="25" height="20" visible="0">
   <data encoding="base64" compression="zlib">
@@ -76,32 +97,39 @@
   </data>
  </layer>
  <objectgroup id="10" name="Moving Platforms">
-  <object id="3" gid="1" x="513.333" y="1921.33" width="128" height="128">
+  <object id="3" gid="1" x="513.333" y="1921.33" width="256" height="128">
    <properties>
-    <property name=" change_x" value="2.0"/>
-    <property name="boundary_left" value="500.0"/>
-    <property name="boundary_right" value="1000.0"/>
+    <property name="boundary_left" value="250.0"/>
+    <property name="boundary_right" value="705.0"/>
+    <property name="change_x" value="1.0"/>
+   </properties>
+  </object>
+  <object id="4" gid="1" x="2060" y="1288" width="256" height="128">
+   <properties>
+    <property name="boundary_bottom" value="200"/>
+    <property name="boundary_top" value="1000"/>
+    <property name="change_y" value="1.0"/>
    </properties>
   </object>
  </objectgroup>
- <layer id="11" name="Ladders" width="25" height="20" visible="0">
+ <layer id="11" name="Ladders" width="25" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwVAHAAfQAAE=
+   eJxjYBgFo2AUjAJMIEwHO4RG7Ri1YxRQDQAASoMAgA==
   </data>
  </layer>
  <layer id="1" name="Platforms" width="25" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMFwBIxRTqgYfYIdiStVgAzC3wfQz4sHEqMGnb6hjAPVwAbA=
+   eJxjYBgFo2DwAEYoxsUfBbQHyGE+Gv5DHxATh5TGMzsUU6oGG4C5DaafEQ/GpgbdHHz6yMXofhwoDAAP/wGo
   </data>
  </layer>
- <layer id="8" name="Doors" width="25" height="20" visible="0">
+ <layer id="8" name="Doors" width="25" height="20">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2AUjIJRMAqIB7x0sIOLDnYMNwAAKJAAGA==
   </data>
  </layer>
- <layer id="2" name="Coins" width="25" height="20" visible="0">
+ <layer id="2" name="Coins" width="25" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMAooB6xEsEcB7QAAHZwAEA==
+   eJxjYBgFo2AUjIJRQAxgHWgHDHLASgR7FNAOAAAqvAAV
   </data>
  </layer>
  <layer id="3" name="Crates" width="25" height="20" visible="0">
@@ -111,7 +139,7 @@
  </layer>
  <layer id="4" name="Don't Touch" width="25" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwVAHAAfQAAE=
+   eJxjYBgFo2AUjIJRMApGAbmAE4oHGgAAETwAEw==
   </data>
  </layer>
  <layer id="5" name="Chests" width="25" height="20">

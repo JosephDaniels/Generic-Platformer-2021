@@ -102,7 +102,7 @@ class MyGame(arcade.Window):
         self.coin_list = arcade.SpriteList()
         self.crate_list = arcade.SpriteList()
         self.doors_list = arcade.SpriteList()
-        self.ladders_list = arcade.SpriteList()
+        self.ladder_list = arcade.SpriteList()
         self.foreground_list = arcade.SpriteList()
         self.background_list = arcade.SpriteList()
         self.dont_touch_list = arcade.SpriteList()
@@ -137,7 +137,7 @@ class MyGame(arcade.Window):
         # Name of the layer for doors
         doors_layer_name = 'Doors'
         # Name of layer for ladders
-        ladders_layer_name = 'Ladders'
+        ladder_layer_name = 'Ladders'
         # Name of the layer that has items for foreground
         foreground_layer_name = 'Foreground'
         # Name of the layer that has items for background
@@ -185,7 +185,7 @@ class MyGame(arcade.Window):
         self.doors_list = arcade.tilemap.process_layer(my_map, doors_layer_name, TILE_SCALING)
 
         # -- Ladders
-        self.ladders_list = arcade.tilemap.process_layer(my_map, ladders_layer_name, TILE_SCALING)
+        self.ladder_list = arcade.tilemap.process_layer(my_map, ladder_layer_name, TILE_SCALING)
         
         # -- Don't Touch Layer
         self.dont_touch_list = arcade.tilemap.process_layer(my_map,
@@ -201,7 +201,8 @@ class MyGame(arcade.Window):
         # Create the 'physics engine'
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                              self.wall_list,
-                                                             GRAVITY)
+                                                             gravity_constant = GRAVITY,
+                                                             ladders=self.ladder_list)
 
     def on_draw(self):
         """ Render the screen. """
@@ -218,7 +219,7 @@ class MyGame(arcade.Window):
         self.doors_list.draw()
         self.crates_list.draw()
         self.chests_list.draw()
-        self.ladders_list.draw()
+        self.ladder_list.draw()
         
         self.dont_touch_list.draw()
         self.player_list.draw()
@@ -237,9 +238,15 @@ class MyGame(arcade.Window):
         """Called whenever a key is pressed. """
 
         if key == arcade.key.UP or key == arcade.key.W:
-            if self.physics_engine.can_jump():
-                self.player_sprite.change_y = PLAYER_JUMP_SPEED
+            if self.physics_engine.is_on_ladder():
+                self.player_sprite.change_y = PLAYER_MOVEMENT_SPEED
+            elif key == arcade.key.UP or key == arcade.key.W:
+                if self.physics_engine.can_jump():
+                    self.player_sprite.change_y = PLAYER_JUMP_SPEED
                 arcade.play_sound(self.jump_sound)
+        elif key == arcade.key.DOWN or key == arcade.key.S:
+            if self.physics_engine.is_on_ladder():
+                self.player_sprite.change_y = -PLAYER_MOVEMENT_SPEED
         elif key == arcade.key.LEFT or key == arcade.key.A:
             self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
         elif key == arcade.key.RIGHT or key == arcade.key.D:
@@ -253,6 +260,12 @@ class MyGame(arcade.Window):
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
+        if key == arcade.key.UP or key == arcade.key.W:
+            if self.physics_engine.is_on_ladder():
+                self.player_sprite.change_y = 0
+        elif key == arcade.key.DOWN or key == arcade.key.S:
+            if self.physics_engine.is_on_ladder():
+                self.player_sprite.change_y = 0
         if key == arcade.key.LEFT or key == arcade.key.A:
             self.player_sprite.change_x = 0
         elif key == arcade.key.RIGHT or key == arcade.key.D:
