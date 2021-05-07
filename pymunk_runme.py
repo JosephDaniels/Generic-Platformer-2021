@@ -265,12 +265,65 @@ class PlayerSprite(arcade.Sprite):
                                      color=arcade.color.GREEN)
 
 class BulletSprite(arcade.SpriteSolidColor):
+
+    def __init__(self, *args):
+        super(BulletSprite, self).__init__(*args)
+        self.life_timer = 500
+        self.expired = False
+
+    def decrement_timer(self):
+        self.life_timer-=1
+        if self.life_timer <= 0:
+            self.expired = True
+
     """ Bullet Sprite """
     def pymunk_moved(self, physics_engine, dx, dy, d_angle):
         """ Handle when the sprite is moved by the physics engine. """
         # If the bullet falls below the screen, remove it
         if self.center_y < -100:
             self.remove_from_sprite_lists()
+
+
+class EnemySprite(arcade.Sprite):
+    def __init__(self, img, scaling):
+        super(EnemySprite, self).__init__(img, scaling)
+        # Player Health
+        self.max_health = 5 ## Maximum Health
+        self.current_health = 5 ## Current Health
+
+        # Stamina
+        self.max_stamina = 10
+        self.current_stamina = 10
+
+    def draw_health_number(self):
+        """ Draw how many hit points we have """
+
+        health_string = f"{self.current_health}/{self.max_health}"
+        arcade.draw_text(health_string,
+                         start_x=self.center_x + HEALTH_NUMBER_OFFSET_X,
+                         start_y=self.center_y + HEALTH_NUMBER_OFFSET_Y,
+                         font_size=12,
+                         color=arcade.color.WHITE)
+
+    def draw_health_bar(self):
+        """ Draw the health bar """
+
+        # Draw the 'unhealthy' background
+        if self.current_health < self.max_health:
+            arcade.draw_rectangle_filled(center_x=self.center_x,
+                                         center_y=self.center_y + HEALTHBAR_OFFSET_Y,
+                                         width=HEALTHBAR_WIDTH,
+                                         height=3,
+                                         color=arcade.color.RED)
+
+        # Calculate width based on health
+        health_width = HEALTHBAR_WIDTH * (self.current_health / self.max_health)
+
+        arcade.draw_rectangle_filled(center_x=self.center_x - 0.5 * (HEALTHBAR_WIDTH - health_width),
+                                     center_y=self.center_y + HEALTHBAR_OFFSET_Y,
+                                     width=health_width,
+                                     height=HEALTHBAR_HEIGHT,
+                                     color=arcade.color.GREEN)
 
 class GameWindow(arcade.Window):
     """ Main Window """
@@ -335,19 +388,6 @@ class GameWindow(arcade.Window):
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
 
-        # Create an Enemy for testing purposes
-        enemy = arcade.Sprite("images/enemies/slimeBlue.png", SPRITE_SIZE)
-        print (enemy)
-
-        enemy.bottom = SPRITE_SIZE
-        enemy.left = SPRITE_SIZE * 2
-
-        # Set boundaries on the left/right the enemy can't cross
-        enemy.boundary_right = SPRITE_SIZE * 8
-        enemy.boundary_left = SPRITE_SIZE * 3
-        enemy.change_x = 2
-        self.enemy_list.append(enemy)
-
         # Create player health bar sprite
 ##        self.player_healthbar = PlayerHealthBar(self.player_sprite,
 ##                                                self.player_sprite.scale,
@@ -368,6 +408,18 @@ class GameWindow(arcade.Window):
                                                                 'Moving Platforms',
                                                                 SPRITE_SCALING_TILES)
 
+        # Create an Enemy for testing purposes
+        enemy = EnemySprite("images/enemies/slimeBlue.png", 0.5)
+
+        enemy.bottom = SPRITE_SIZE
+        enemy.left = SPRITE_SIZE * 2
+
+        # Set boundaries on the left/right the enemy can't cross
+        enemy.boundary_right = SPRITE_SIZE * 8
+        enemy.boundary_left = SPRITE_SIZE * 3
+        enemy.change_x = 2
+        self.enemy_list.append(enemy)
+
         # --- Pymunk Physics Engine Setup ---
 
         # The default damping for every object controls the percent of velocity
@@ -387,16 +439,34 @@ class GameWindow(arcade.Window):
 
         def wall_hit_handler(bullet_sprite, _wall_sprite, _arbiter, _space, _data):
             """ Called for bullet/wall collision """
-            bullet_sprite.remove_from_sprite_lists()
+            ##bullet_sprite.remove_from_sprite_lists()
+            pass
 
         self.physics_engine.add_collision_handler("bullet", "wall", post_handler=wall_hit_handler)
 
         def item_hit_handler(bullet_sprite, item_sprite, _arbiter, _space, _data):
             """ Called for bullet/wall collision """
-            bullet_sprite.remove_from_sprite_lists()
+            ##bullet_sprite.remove_from_sprite_lists()
             item_sprite.remove_from_sprite_lists()
 
         self.physics_engine.add_collision_handler("bullet", "item", post_handler=item_hit_handler)
+
+        def bullet_enemy_hit_handler(bullet_sprite, enemy_sprite,  _arbiter, _space, _data):
+            enemy_sprite.current_health -= 1
+            bullet_sprite.remove_from_sprite_lists()
+            if enemy_sprite.current_health <=0:
+                enemy_sprite.remove_from_sprite_lists()
+
+        self.physics_engine.add_collision_handler("bullet", "enemy", post_handler=bullet_enemy_hit_handler)
+
+        def player_enemy_hit_handler(enemy_sprite, player_sprite, _arbiter, _space, _data):
+            # add in code to handle a damage delay, etc...
+            player_sprite.current_health -= 1
+            if player_sprite.current_health <= 0:
+                player_sprite.remove_from_sprite_lists()
+                # endgame or spawn or whatever...
+
+        self.physics_engine.add_collision_handler("enemy", "player", post_handler=player_enemy_hit_handler)
 
         # Add the player.
         # For the player, we set the damping to a lower value, which increases
@@ -435,6 +505,10 @@ class GameWindow(arcade.Window):
 
         # Add kinematic sprites
         self.physics_engine.add_sprite_list(self.moving_sprites_list,
+                                            body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
+
+        self.physics_engine.add_sprite_list(self.enemy_list,
+                                            collision_type ="enemy",
                                             body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
 
     def on_key_press(self, key, modifiers):
@@ -584,6 +658,12 @@ class GameWindow(arcade.Window):
             velocity = (moving_sprite.change_x * 1 / delta_time, moving_sprite.change_y * 1 / delta_time)
             self.physics_engine.set_velocity(moving_sprite, velocity)
 
+        #Handle Bullet Lifetime
+        for bullet in self.bullet_list:
+            bullet.decrement_timer()
+            if bullet.expired:
+                bullet.remove_from_sprite_lists()
+
     def on_draw(self):
         """ Draw everything """
         arcade.start_render()
@@ -600,7 +680,8 @@ class GameWindow(arcade.Window):
 
         for enemy in self.enemy_list:
             enemy.draw()
-
+            enemy.draw_health_bar()
+            enemy.draw_health_number()
 def main():
     """ Main method """
     window = GameWindow(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
