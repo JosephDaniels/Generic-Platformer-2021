@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="25" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="5" nextobjectid="2">
- <tileset firstgid="1" source="../../../../../AppData/Local/Programs/Python/Python39/Lib/site-packages/arcade/resources/tmx_maps/more_tiles.tsx"/>
+ <tileset firstgid="1" source="../../../../../PycharmProjects/Generic-Platformer-2021/venv/Lib/site-packages/arcade/resources/tmx_maps/more_tiles.tsx"/>
  <layer id="2" name="Dynamic Items" width="25" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -18,7 +18,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,149,149,0,0,0,0,0,0,0,0,0,0,0,0,149,149,0,0,0,0,0,0,
+0,0,0,79,79,0,0,0,0,0,0,0,0,0,0,0,0,79,79,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,
